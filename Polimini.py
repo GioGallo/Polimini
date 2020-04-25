@@ -86,12 +86,21 @@ def StampaPolimini(n):
 
     max =0
     for polimino in polimini:
-        print(polimino.grafica())
-        #print(polimino.quadrati)
+        #print(polimino.grafica())
+        print(polimino.quadrati)
         lastY =0
         pos = []
+        minY =0
+        minX=0
+        for quadrato in polimino.quadrati:
+            tempY=quadrato[1]
+            tempX=quadrato[0]
+            if(tempY<minY):
+                minY=tempY
+            if(tempX<minX):
+                minX=tempX
         for index,quadrato in enumerate(polimino.quadrati,start=1):
-            lastY=printPolimino(quadrato[0],quadrato[1],index,max)
+            lastY=printPolimino(quadrato[0],quadrato[1],index,max,minY,minX)
             pos.append(lastY)
             print("LAST Y {}".format(lastY))
 
@@ -99,14 +108,15 @@ def StampaPolimini(n):
         max= pos[-1]
         print(max)
         max=printVerticalSpace(max + 5)
+    return max
         
         
 
 def printVerticalSpace(max):
-    w.create_rectangle(0, max,500, max+40, fill="white", outline="")
+    canvas.create_rectangle(0, max,500, max+40, fill="white", outline="")
     return max+45
 
-def printPolimino(x,y,i,startPos):
+def printPolimino(x,y,i,startPos,minY,minX):
 
 
     listX = []
@@ -120,19 +130,34 @@ def printPolimino(x,y,i,startPos):
     pezzoN = i
 
     if i == pezzoN:
-        if x == -1:
+        """if x == -1:
             xInitPos = 5
         if x == 0:
             xInitPos = 35
         if x == 1: 
-            xInitPos = 65
+            xInitPos = 65"""
+        if(x==minX):
+            xInitPos = 5
+        else:
+            diff = x-minX
+            xInitPos = 5
+            xInitPos+= diff*30
 
-        if y == -1:
+            
+        """if y == -1:
             yInitPos = startPos+5
         if y == 0:
             yInitPos = startPos+35
         if y == 1:
-            yInitPos = startPos+65
+            yInitPos = startPos+65"""
+
+        if(y == minY):
+            yInitPos = startPos+5
+        else:
+            diff = y-minY
+            yInitPos = startPos+5
+            yInitPos+= diff*30
+        
         pezzoN = -1
 
 
@@ -141,7 +166,7 @@ def printPolimino(x,y,i,startPos):
     squareWidth = 30
     xFinPos = xInitPos + squareWidth
     yFinPos = yInitPos + squareWidth
-    w.create_rectangle(xInitPos, yInitPos, xFinPos, yFinPos, fill="red")
+    canvas.create_rectangle(xInitPos, yInitPos, xFinPos, yFinPos, fill="red")
     return yFinPos
 
 if __name__ == "__main__":
@@ -150,11 +175,21 @@ if __name__ == "__main__":
     name = askstring("Polimini", "Numero polimino")
     np = int(name)
     root.destroy()
-    master = tk.Tk()
-    canvas_width = 500
-    canvas_height = 500
-    w = tk.Canvas(master, width=canvas_width, height=canvas_height, bg="white")
-    w.pack()
 
-    StampaPolimini(np)
+    master = tk.Tk()
+
+    frame=tk.Frame(master,width=800,height=800)
+    frame.pack(expand=True, fill="both")
+    canvas=tk.Canvas(frame,bg='#FFFFFF',width=800,height=800,scrollregion=(0,0,300,300))
+    vbar=tk.Scrollbar(frame,orient="vertical")
+    vbar.pack(side="right",fill="y")
+    vbar.config(command=canvas.yview)
+    canvas.config(width=800,height=800)
+    canvas.config(yscrollcommand=vbar.set)
+    canvas.pack(side="left",expand=True,fill="both")
+
+
+    max=StampaPolimini(np)
+
+    canvas.configure(scrollregion=(0,0,max,max))
     tk.mainloop()
