@@ -84,13 +84,29 @@ def StampaPolimini(n):
             poliminiSuccessivi.update(polimino.successivo())
         polimini = poliminiSuccessivi
 
+    max =0
     for polimino in polimini:
-        #print(polimino.grafica())
+        print(polimino.grafica())
         #print(polimino.quadrati)
+        lastY =0
+        pos = []
         for index,quadrato in enumerate(polimino.quadrati,start=1):
-            printPolimino(quadrato[0],quadrato[1],index)
+            lastY=printPolimino(quadrato[0],quadrato[1],index,max)
+            pos.append(lastY)
+            print("LAST Y {}".format(lastY))
 
-def printPolimino(x,y,i):
+        pos.sort()
+        max= pos[-1]
+        print(max)
+        max=printVerticalSpace(max + 5)
+        
+        
+
+def printVerticalSpace(max):
+    w.create_rectangle(0, max,500, max+40, fill="white", outline="")
+    return max+45
+
+def printPolimino(x,y,i,startPos):
 
 
     listX = []
@@ -112,12 +128,11 @@ def printPolimino(x,y,i):
             xInitPos = 65
 
         if y == -1:
-            yInitPos = 5
+            yInitPos = startPos+5
         if y == 0:
-            yInitPos = 35
+            yInitPos = startPos+35
         if y == 1:
-            yInitPos = 65
-
+            yInitPos = startPos+65
         pezzoN = -1
 
 
@@ -127,6 +142,7 @@ def printPolimino(x,y,i):
     xFinPos = xInitPos + squareWidth
     yFinPos = yInitPos + squareWidth
     w.create_rectangle(xInitPos, yInitPos, xFinPos, yFinPos, fill="red")
+    return yFinPos
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -137,7 +153,7 @@ if __name__ == "__main__":
     master = tk.Tk()
     canvas_width = 500
     canvas_height = 500
-    w = tk.Canvas(master, width=canvas_width, height=canvas_height)
+    w = tk.Canvas(master, width=canvas_width, height=canvas_height, bg="white")
     w.pack()
 
     StampaPolimini(np)
