@@ -55,8 +55,8 @@ class Polimino(object):
                 polimini.append(
                     Polimino(list(self) + [vicino])
                 )
-        return polimini
-    
+        return polimini    
+
     def grafica(self):
         """Rappresentazione grafica di un polimino"""
         polimino = self.translate()
@@ -85,8 +85,48 @@ def StampaPolimini(n):
         polimini = poliminiSuccessivi
 
     for polimino in polimini:
-        print(polimino.grafica())
-        print(polimino)
+        #print(polimino.grafica())
+        #print(polimino.quadrati)
+        for index,quadrato in enumerate(polimino.quadrati,start=1):
+            printPolimino(quadrato[0],quadrato[1],index)
+
+def printPolimino(x,y,i):
+
+
+    listX = []
+    listY = []
+    listX.append(x)
+    listY.append(y)
+
+    ultInsX = listX[-1]
+    ultInsY = listY[-1]
+
+    pezzoN = i
+
+    if i == pezzoN:
+        if x == -1:
+            xInitPos = 5
+        if x == 0:
+            xInitPos = 35
+        if x == 1: 
+            xInitPos = 65
+
+        if y == -1:
+            yInitPos = 5
+        if y == 0:
+            yInitPos = 35
+        if y == 1:
+            yInitPos = 65
+
+        pezzoN = -1
+
+
+
+
+    squareWidth = 30
+    xFinPos = xInitPos + squareWidth
+    yFinPos = yInitPos + squareWidth
+    w.create_rectangle(xInitPos, yInitPos, xFinPos, yFinPos, fill="red")
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -94,5 +134,11 @@ if __name__ == "__main__":
     name = askstring("Polimini", "Numero polimino")
     np = int(name)
     root.destroy()
+    master = tk.Tk()
+    canvas_width = 500
+    canvas_height = 500
+    w = tk.Canvas(master, width=canvas_width, height=canvas_height)
+    w.pack()
 
     StampaPolimini(np)
+    tk.mainloop()
