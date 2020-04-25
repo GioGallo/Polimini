@@ -1,4 +1,5 @@
 import sys
+import random
 import tkinter as tk
 from tkinter.simpledialog import askstring
 
@@ -42,7 +43,7 @@ class Polimino(object):
         return Polimino((x-minX, y-minY) for x, y in self)
 
     def successivo(self):
-        """Ritorna una lista di polimini cin grado superiore"""
+        """Ritorna una lista di polimini con grado superiore"""
         polimini = []
         for quadrato in self:
             vicini = (vicino for vicino in (
@@ -56,20 +57,6 @@ class Polimino(object):
                     Polimino(list(self) + [vicino])
                 )
         return polimini    
-
-    def grafica(self):
-        """Rappresentazione grafica di un polimino"""
-        polimino = self.translate()
-        n = len(polimino)
-        stampa = ""
-        for y in range(n):
-            stampa +="\n"
-            for x in range(n):
-                if((x,y) in polimino.quadrati):
-                    stampa+="X"
-                else:
-                    stampa+="-"
-        return stampa
 
 
 
@@ -86,8 +73,7 @@ def StampaPolimini(n):
 
     max =0
     for polimino in polimini:
-        #print(polimino.grafica())
-        print(polimino.quadrati)
+        color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
         lastY =0
         pos = []
         minY =0
@@ -99,14 +85,12 @@ def StampaPolimini(n):
                 minY=tempY
             if(tempX<minX):
                 minX=tempX
-        for index,quadrato in enumerate(polimino.quadrati,start=1):
-            lastY=printPolimino(quadrato[0],quadrato[1],index,max,minY,minX)
+        for quadrato in polimino.quadrati:
+            lastY=printPolimino(quadrato[0],quadrato[1],color,max,minY,minX)
             pos.append(lastY)
-            print("LAST Y {}".format(lastY))
 
         pos.sort()
         max= pos[-1]
-        print(max)
         max=printVerticalSpace(max + 5)
     return max
         
@@ -116,57 +100,26 @@ def printVerticalSpace(max):
     canvas.create_rectangle(0, max,500, max+40, fill="white", outline="")
     return max+45
 
-def printPolimino(x,y,i,startPos,minY,minX):
+def printPolimino(x,y,color,startPos,minY,minX):
 
+    if(x==minX):
+        xInitPos = 5
+    else:
+        diff = x-minX
+        xInitPos = 5
+        xInitPos+= diff*30
 
-    listX = []
-    listY = []
-    listX.append(x)
-    listY.append(y)
-
-    ultInsX = listX[-1]
-    ultInsY = listY[-1]
-
-    pezzoN = i
-
-    if i == pezzoN:
-        """if x == -1:
-            xInitPos = 5
-        if x == 0:
-            xInitPos = 35
-        if x == 1: 
-            xInitPos = 65"""
-        if(x==minX):
-            xInitPos = 5
-        else:
-            diff = x-minX
-            xInitPos = 5
-            xInitPos+= diff*30
-
-            
-        """if y == -1:
-            yInitPos = startPos+5
-        if y == 0:
-            yInitPos = startPos+35
-        if y == 1:
-            yInitPos = startPos+65"""
-
-        if(y == minY):
-            yInitPos = startPos+5
-        else:
-            diff = y-minY
-            yInitPos = startPos+5
-            yInitPos+= diff*30
+    if(y == minY):
+        yInitPos = startPos+5
+    else:
+        diff = y-minY
+        yInitPos = startPos+5
+        yInitPos+= diff*30
         
-        pezzoN = -1
-
-
-
-
     squareWidth = 30
     xFinPos = xInitPos + squareWidth
     yFinPos = yInitPos + squareWidth
-    canvas.create_rectangle(xInitPos, yInitPos, xFinPos, yFinPos, fill="red")
+    canvas.create_rectangle(xInitPos, yInitPos, xFinPos, yFinPos, fill=color)
     return yFinPos
 
 if __name__ == "__main__":
