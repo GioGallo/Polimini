@@ -112,7 +112,7 @@ def printVerticalSpace(max):
 #minX e minY servono per capire di quanto spostarsi in base al pezzo che arriva
 def printPolimino(x,y,color,startPos,minY,minX):
 
-    xInitPos = 5+((x-minX)*30)
+    xInitPos = 40+((x-minX)*30)
     yInitPos = startPos+5+((y-minY)*30)
     
     #definizione punti finali in base ai parametri settati sopra
